@@ -1,31 +1,19 @@
-
+[toc]
 # 基于Docker在Ubuntu上部署nextcloud
 
+## 1.Docker安装
 
+参考[docker docs在Ubuntu上安装Docker Engine](https://docs.docker.com/engine/install/ubuntu/)
 
-## Docker安装
-
-
-
-参考以下网站找到安装Docker Engine 的教程
-
-
-> https://docs.docker.com/desktop/install/linux-install/
-
-
-### 卸载旧版本Docker
+### 1.1卸载旧版本Docker
 
 ```bash
 for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get remove $pkg; done
 ```
 
-### 换源（可选）
+### 1.2换源（可选）
 
-可以使用清华镜像源
-
-
-> https://mirrors.tuna.tsinghua.edu.cn/help/debian/
-
+可以使用[清华镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/debian/)
 
 启用源码镜像，加快apt-get。一般来说，只需要替换以下文件即可换源。
 
@@ -53,9 +41,9 @@ deb-src https://mirrors.tuna.tsinghua.edu.cn/debian-security bookworm-security m
 # deb-src https://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
 ```
 
-### 使用Apt下载Docker
+### 1.3使用Apt下载Docker
 
-#### 建立 Docker's Apt 仓库
+#### 1.3.1建立 Docker's Apt 仓库
 
 ```bash
 # Add Docker's official GPG key:
@@ -73,23 +61,147 @@ echo \
 sudo apt-get update
 ```
 
-#### 安装Docker包
+#### 1.3.2安装Docker包
 
 ```bash
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
-#### 确认安装成功
+#### 1.3.3确认安装成功
 
 ```bash
 sudo docker run hello-world
 ```
 
-#### 更新Docker
+#### 1.3.4更新Docker
 
-重复[安装Docker包](#安装docker包)操作
+重复[安装Docker包](#132安装docker包)操作
 
+## 2.安装mysql
 
+可以指定用户使用docker，就不需要sudo了
+
+```bash
+$ sudo usermod -aG docker username
+$ sudo systemctl restart docker
+```
+
+参考[CSDN docker部署nextcloud+mysql+onlyoffice](https://blog.csdn.net/u011740601/article/details/115790720)
+
+参考知乎[基于Docker安装nextcloud](https://zhuanlan.zhihu.com/p/107820215)
+
+### 2.1获取mysql镜像并启动容器
+
+获取mysql镜像
+
+```bash
+docker pull mysql  #当时版本是8.1.0
+```
+
+启动mysql容器
+
+```bash
+docker run --name=nextcloud_db \  #容器名称是nextcloud_db
+-e MYSQL_ROOT_PASSWORD=ROOTPASSWD \  #mysql root 密码
+-v /nc_mysql/conf:/etc/mysql/conf.d \  #把mysql配置文件数据放
+-v /nc_mysql/data:/var/lib/mysql \  #在本地，方便配置和迁移
+-d -p 33306:3306 \  #容器3306端口映射到本地33306，后面创建了容器之间的链接，所以没用到
+--restart=always \  #Docker重启时容器也重启
+mysql
+```
+
+进入nextcloud_db容器创建nextcloud数据库
+
+```bash
+docker exec -it nextcloud_db mysql -u root -p  #进入容器，以root用户打开数据库
+CREATE DATABASE nextcloud;  #创建nextcloud数据库
+GRANT ALL ON *.* TO 'root'@'%';
+flush privileges;
+exit;
+```
+
+## 3.安装nextcloud
+
+参考[CSDN docker部署nextcloud+mysql+onlyoffice](https://blog.csdn.net/u011740601/article/details/115790720)
+
+参考知乎[基于Docker安装nextcloud](https://zhuanlan.zhihu.com/p/107820215)
+
+### 3.1获取并安装nextcloud镜像
+
+获取nextcloud镜像
+
+```bash
+docker pull nextcloud  #当时版本是27.1.2
+```
+
+```bash
+docker run -d \  #-d表示后台运行
+--name=nextcloud \  #容器名称为nextcloud
+--privileged \  
+--link nextcloud_db:db \  #连接之前创建的数据库
+-v /nc:/var/www/html \  #把数据放在本地方便迁移
+-p 48080:80 \  #把容器80端口映射到本地48080端口
+--restart=always \  #Docker重启时容器也重启
+nextcloud
+```
+
+浏览器输入127.0.0.1:48080进入nextcloud，设置nextcloud管理员账号；数据库选择mysql，由上到下分别填写
+
+* root  （数据库用户）
+* ROOTPASSWD  （数据库密码）
+* nextcloud_db （数据库名）
+* db （数据库地址，之前容器之间创建了连接）
+
+## 4.安装Preview Generator插件（可选）
+
+服务器性能较差，使用该插件可以预先生成缩略图
+
+### 4.1安装插件
+
+可以在浏览器上登录nextcloud在应用管理处安装，也可以手动安装。在[https://apps.nextcloud.com/](https://apps.nextcloud.com/)搜索Preview Generator手动下载，把插件包解压后复制到
+> /var/www/html/apps
+
+随后在浏览器上启用插件。
+
+第一次启用插件需要生成所有文件的缩略图
+
+```bash
+sudo docker exec --user www-data -it nextcloud php /var/www/html/occ preview:generate-all -vvv
+```
+
+然后加入crontab（我选择了10min一次）
+然后在crontab -e 加入以下计划（我选择了10min一次）
+
+```bash
+crontab -e  
+*/10 * * * * docker exec --user www-data -i nextcloud php /var/www/html/occ preview:pre-generate -vvv
+```
+
+### 4.2 mp4等文件没有预览图
+
+参考[Nextcloud: Install Preview Generator](https://www.allerstorfer.at/nextcloud-install-preview-generator/)完成添加。
+
+## 5.内网穿透（可选）
+
+服务器不在公网，可以选择使用frp进行内网穿透。
+
+使用systemd实现frp开机启动，在/usr/lib/systemd/system/目录下添加StartupFrp.service文件，填入以下内容
+
+```bash
+[Unit]
+Description=StartupFrp
+After=network-online.target
+
+[Service]
+ExecStart=******  #frp启动脚本
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+systemctl enable StartupFrp.service  #启动服务
+```
 
 
 
