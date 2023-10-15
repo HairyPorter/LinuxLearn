@@ -1,4 +1,21 @@
-[toc]
+- [基于Docker在Ubuntu上部署nextcloud](#基于docker在ubuntu上部署nextcloud)
+  - [1.Docker安装](#1docker安装)
+    - [1.1卸载旧版本Docker](#11卸载旧版本docker)
+    - [1.2换源（可选）](#12换源可选)
+    - [1.3使用Apt下载Docker](#13使用apt下载docker)
+      - [1.3.1建立 Docker's Apt 仓库](#131建立-dockers-apt-仓库)
+      - [1.3.2安装Docker包](#132安装docker包)
+      - [1.3.3确认安装成功](#133确认安装成功)
+      - [1.3.4更新Docker](#134更新docker)
+  - [2.安装mysql](#2安装mysql)
+    - [2.1获取mysql镜像并启动容器](#21获取mysql镜像并启动容器)
+  - [3.安装nextcloud](#3安装nextcloud)
+    - [3.1获取并安装nextcloud镜像](#31获取并安装nextcloud镜像)
+  - [4.安装Preview Generator插件（可选）](#4安装preview-generator插件可选)
+    - [4.1安装插件](#41安装插件)
+    - [4.2 mp4等文件没有预览图](#42-mp4等文件没有预览图)
+  - [5.内网穿透（可选）](#5内网穿透可选)
+
 # 基于Docker在Ubuntu上部署nextcloud
 
 ## 1.Docker安装
@@ -82,8 +99,8 @@ sudo docker run hello-world
 可以指定用户使用docker，就不需要sudo了
 
 ```bash
-$ sudo usermod -aG docker username
-$ sudo systemctl restart docker
+sudo usermod -aG docker username
+sudo systemctl restart docker
 ```
 
 参考[CSDN docker部署nextcloud+mysql+onlyoffice](https://blog.csdn.net/u011740601/article/details/115790720)
@@ -202,6 +219,3 @@ WantedBy=multi-user.target
 ```bash
 systemctl enable StartupFrp.service  #启动服务
 ```
-
-
-
