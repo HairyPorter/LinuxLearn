@@ -11,9 +11,11 @@
     - [2.1获取mysql镜像并启动容器](#21获取mysql镜像并启动容器)
   - [3.安装nextcloud](#3安装nextcloud)
     - [3.1获取并安装nextcloud镜像](#31获取并安装nextcloud镜像)
-  - [4.安装Preview Generator插件（可选）](#4安装preview-generator插件可选)
-    - [4.1安装插件](#41安装插件)
-    - [4.2 mp4等文件没有预览图](#42-mp4等文件没有预览图)
+  - [4.安装插件（可选）](#4安装插件可选)
+    - [4.1Preview Generator](#41preview-generator)
+      - [4.1.1安装](#411安装)
+    - [4.1.2 mp4文件没有预览图](#412-mp4文件没有预览图)
+    - [4.1.3 pdf文件没有缩略图](#413-pdf文件没有缩略图)
   - [5.内网穿透（可选）](#5内网穿透可选)
 
 # 基于Docker在Ubuntu上部署nextcloud
@@ -169,12 +171,13 @@ nextcloud
 * nextcloud_db （数据库名）
 * db （数据库地址，之前容器之间创建了连接）
 
-## 4.安装Preview Generator插件（可选）
+## 4.安装插件（可选）
 
-服务器性能较差，使用该插件可以预先生成缩略图
+### 4.1Preview Generator
 
-### 4.1安装插件
+#### 4.1.1安装
 
+服务器性能较差，使用该插件可以预先生成缩略图  
 可以在浏览器上登录nextcloud在应用管理处安装，也可以手动安装。在[https://apps.nextcloud.com/](https://apps.nextcloud.com/)搜索Preview Generator手动下载，把插件包解压后复制到
 > /var/www/html/apps
 
@@ -194,9 +197,14 @@ crontab -e
 */10 * * * * docker exec --user www-data -i nextcloud php /var/www/html/occ preview:pre-generate -vvv
 ```
 
-### 4.2 mp4等文件没有预览图
+### 4.1.2 mp4文件没有预览图
 
 参考[Nextcloud: Install Preview Generator](https://www.allerstorfer.at/nextcloud-install-preview-generator/)完成添加。
+
+### 4.1.3 pdf文件没有缩略图
+
+参考[How can I enable PDF preview](https://help.nextcloud.com/t/how-can-i-enable-pdf-preview/90303)  
+注释掉"Imagemagick security policy"的部分内容
 
 ## 5.内网穿透（可选）
 
