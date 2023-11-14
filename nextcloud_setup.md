@@ -166,10 +166,10 @@ nextcloud
 
 浏览器输入127.0.0.1:48080进入nextcloud，设置nextcloud管理员账号；数据库选择mysql，由上到下分别填写
 
-* root  （数据库用户）
-* ROOTPASSWD  （数据库密码）
-* nextcloud_db （数据库名）
-* db （数据库地址，之前容器之间创建了连接）
+- root  （数据库用户）
+- ROOTPASSWD  （数据库密码）
+- nextcloud_db （数据库名）
+- db （数据库地址，之前容器之间创建了连接）
 
 ## 4.安装插件（可选）
 
