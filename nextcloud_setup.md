@@ -1,3 +1,5 @@
+# 基于Docker在Ubuntu上部署nextcloud
+
 - [基于Docker在Ubuntu上部署nextcloud](#基于docker在ubuntu上部署nextcloud)
   - [1.Docker安装](#1docker安装)
     - [1.1卸载旧版本Docker](#11卸载旧版本docker)
@@ -17,8 +19,6 @@
     - [4.1.2 mp4文件没有预览图](#412-mp4文件没有预览图)
     - [4.1.3 pdf文件没有缩略图](#413-pdf文件没有缩略图)
   - [5.内网穿透（可选）](#5内网穿透可选)
-
-# 基于Docker在Ubuntu上部署nextcloud
 
 ## 1.Docker安装
 
