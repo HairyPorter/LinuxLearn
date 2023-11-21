@@ -20,17 +20,17 @@
     - [4.1.3 pdf文件没有缩略图](#413-pdf文件没有缩略图)
   - [5.内网穿透（可选）](#5内网穿透可选)
 
-## 1.Docker安装
+## 1\.Docker安装
 
 参考[docker docs在Ubuntu上安装Docker Engine](https://docs.docker.com/engine/install/ubuntu/)
 
-### 1.1卸载旧版本Docker
+### 1\.1卸载旧版本Docker
 
 ```bash
 for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get remove $pkg; done
 ```
 
-### 1.2换源（可选）
+### 1\.2换源（可选）
 
 可以使用[清华镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/debian/)
 
@@ -40,7 +40,7 @@ for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do
 /etc/apt/sources.list 
 ```
 
-当时23/10/15镜像源  
+当时23/10/15镜像源
 
 ```bash
 # 默认注释了源码镜像以提高 apt update 速度，如有需要可自行取消注释
@@ -60,9 +60,9 @@ deb-src https://mirrors.tuna.tsinghua.edu.cn/debian-security bookworm-security m
 # deb-src https://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
 ```
 
-### 1.3使用Apt下载Docker
+### 1\.3使用Apt下载Docker
 
-#### 1.3.1建立 Docker's Apt 仓库
+#### 1\.3.1建立 Docker's Apt 仓库
 
 ```bash
 # Add Docker's official GPG key:
@@ -80,23 +80,23 @@ echo \
 sudo apt-get update
 ```
 
-#### 1.3.2安装Docker包
+#### 1\.3.2安装Docker包
 
 ```bash
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
-#### 1.3.3确认安装成功
+#### 1\.3.3确认安装成功
 
 ```bash
 sudo docker run hello-world
 ```
 
-#### 1.3.4更新Docker
+#### 1\.3.4更新Docker
 
-重复[安装Docker包](#132安装docker包)操作
+重复[安装Docker包](#132%E5%AE%89%E8%A3%85docker%E5%8C%85)操作
 
-## 2.安装mysql
+## 2\.安装mysql
 
 可以指定用户使用docker，就不需要sudo了
 
@@ -109,7 +109,7 @@ sudo systemctl restart docker
 
 参考知乎[基于Docker安装nextcloud](https://zhuanlan.zhihu.com/p/107820215)
 
-### 2.1获取mysql镜像并启动容器
+### 2\.1获取mysql镜像并启动容器
 
 获取mysql镜像
 
@@ -139,13 +139,13 @@ flush privileges;
 exit;
 ```
 
-## 3.安装nextcloud
+## 3\.安装nextcloud
 
 参考[CSDN docker部署nextcloud+mysql+onlyoffice](https://blog.csdn.net/u011740601/article/details/115790720)
 
 参考知乎[基于Docker安装nextcloud](https://zhuanlan.zhihu.com/p/107820215)
 
-### 3.1获取并安装nextcloud镜像
+### 3\.1获取并安装nextcloud镜像
 
 获取nextcloud镜像
 
@@ -171,14 +171,15 @@ nextcloud
 - nextcloud_db （数据库名）
 - db （数据库地址，之前容器之间创建了连接）
 
-## 4.安装插件（可选）
+## 4\.安装插件（可选）
 
-### 4.1Preview Generator
+### 4\.1Preview Generator
 
-#### 4.1.1安装
+#### 4\.1.1安装
 
 服务器性能较差，使用该插件可以预先生成缩略图  
-可以在浏览器上登录nextcloud在应用管理处安装，也可以手动安装。在[https://apps.nextcloud.com/](https://apps.nextcloud.com/)搜索Preview Generator手动下载，把插件包解压后复制到
+可以在浏览器上登录nextcloud在应用管理处安装，也可以手动安装。在<https://apps.nextcloud.com/>搜索Preview Generator手动下载，把插件包解压后复制到
+
 > /var/www/html/apps
 
 随后在浏览器上启用插件。
@@ -197,16 +198,16 @@ crontab -e
 */10 * * * * docker exec --user www-data -i nextcloud php /var/www/html/occ preview:pre-generate -vvv
 ```
 
-### 4.1.2 mp4文件没有预览图
+### 4\.1.2 mp4文件没有预览图
 
 参考[Nextcloud: Install Preview Generator](https://www.allerstorfer.at/nextcloud-install-preview-generator/)完成添加。
 
-### 4.1.3 pdf文件没有缩略图
+### 4\.1.3 pdf文件没有缩略图
 
 参考[How can I enable PDF preview](https://help.nextcloud.com/t/how-can-i-enable-pdf-preview/90303)  
 注释掉"Imagemagick security policy"的部分内容
 
-## 5.内网穿透（可选）
+## 5\.内网穿透（可选）
 
 服务器不在公网，可以选择使用frp进行内网穿透。
 
