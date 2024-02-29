@@ -228,3 +228,17 @@ WantedBy=multi-user.target
 ```bash
 systemctl enable StartupFrp.service  #启动服务
 ```
+
+```bash
+[Unit]
+Description=StartupFrp
+After=network-online.target
+
+[Service]
+ExecStart=/home/lu/frp/frp_0.51.3_linux_amd64/startvino_frp.sh
+Restart=always
+RestartSec=10
+StartLimitIntervalSec=0
+[Install]
+WantedBy=network-online.target
+```
