@@ -16,6 +16,7 @@
 ```ps
 wsl --mount --vhd "F:\wslF.vhdx" --name wslF -p1
 ```
+
 使用以上方式挂载vhdx
 
 也许需要代码环境，开发环境分开有点用
