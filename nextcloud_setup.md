@@ -19,6 +19,7 @@
       - [4.2.1安装](#421安装)
       - [4.2.2 mp4文件没有预览图](#422-mp4文件没有预览图)
       - [4.2.3 pdf文件没有缩略图](#423-pdf文件没有缩略图)
+    - [4.3Bookmarks](#43bookmarks)
   - [5.内网穿透（可选）](#5内网穿透可选)
   - [6.ssh密钥登录](#6ssh密钥登录)
     - [6.1上传密钥](#61上传密钥)
@@ -215,6 +216,10 @@ crontab -e
 
 参考[How can I enable PDF preview](https://help.nextcloud.com/t/how-can-i-enable-pdf-preview/90303)  
 注释掉"Imagemagick security policy"的部分内容
+
+### 4.3Bookmarks
+
+可以给chrome，edge浏览器同步书签，配合浏览器插件`floccus`，同时nextcloud要安装插件`Bookmarks`
 
 ## 5\.内网穿透（可选）
 
