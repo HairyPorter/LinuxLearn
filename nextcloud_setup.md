@@ -14,11 +14,15 @@
   - [3.安装nextcloud](#3安装nextcloud)
     - [3.1获取并安装nextcloud镜像](#31获取并安装nextcloud镜像)
   - [4.安装插件（可选）](#4安装插件可选)
-    - [4.1Preview Generator](#41preview-generator)
-      - [4.1.1安装](#411安装)
-    - [4.1.2 mp4文件没有预览图](#412-mp4文件没有预览图)
-    - [4.1.3 pdf文件没有缩略图](#413-pdf文件没有缩略图)
+    - [4.1安装手动插件](#41安装手动插件)
+    - [4.2Preview Generator](#42preview-generator)
+      - [4.2.1安装](#421安装)
+      - [4.2.2 mp4文件没有预览图](#422-mp4文件没有预览图)
+      - [4.2.3 pdf文件没有缩略图](#423-pdf文件没有缩略图)
   - [5.内网穿透（可选）](#5内网穿透可选)
+  - [6.ssh密钥登录](#6ssh密钥登录)
+    - [6.1上传密钥](#61上传密钥)
+    - [6.2禁止密码登录](#62禁止密码登录)
 
 ## 1\.Docker安装
 
@@ -173,14 +177,19 @@ nextcloud
 
 ## 4\.安装插件（可选）
 
-### 4\.1Preview Generator
+### 4\.1安装手动插件
 
-#### 4\.1.1安装
+1.在[官网](https://apps.nextcloud.com/)上查找需要安装的插件，在插件页面下选择合适版本的插件下载到本地；
+2.把打包的插件文件复制到服务器上，插件放在目录`/path/to/nextcloud/apps/`
+
+3.在网页上启用插件即可
+
+### 4\.2Preview Generator
+
+#### 4\.2.1安装
 
 服务器性能较差，使用该插件可以预先生成缩略图  
-可以在浏览器上登录nextcloud在应用管理处安装，也可以手动安装。在<https://apps.nextcloud.com/>搜索Preview Generator手动下载，把插件包解压后复制到
-
-> /var/www/html/apps
+可以在浏览器上登录nextcloud在应用管理处安装，也可以手动安装。在<https://apps.nextcloud.com/>搜索Preview Generator手动下载，把插件包解压后复制到`/var/www/html/apps`
 
 随后在浏览器上启用插件。
 
@@ -198,11 +207,11 @@ crontab -e
 */10 * * * * docker exec --user www-data -i nextcloud php /var/www/html/occ preview:pre-generate -vvv
 ```
 
-### 4\.1.2 mp4文件没有预览图
+#### 4\.2.2 mp4文件没有预览图
 
 参考[Nextcloud: Install Preview Generator](https://www.allerstorfer.at/nextcloud-install-preview-generator/)完成添加。
 
-### 4\.1.3 pdf文件没有缩略图
+#### 4\.2.3 pdf文件没有缩略图
 
 参考[How can I enable PDF preview](https://help.nextcloud.com/t/how-can-i-enable-pdf-preview/90303)  
 注释掉"Imagemagick security policy"的部分内容
@@ -242,3 +251,27 @@ StartLimitIntervalSec=0
 [Install]
 WantedBy=network-online.target
 ```
+
+## 6\.ssh密钥登录
+
+### 6\.1上传密钥
+
+可以用其他方式登录到服务器，将电脑的公钥追加到`~/.ssh/authorized_keys`文件上
+电脑的公钥文件一般是`C:\Users\xxxxx\.ssh\id_rsa.pub`
+
+上传后即可使用密钥登录
+
+### 6\.2禁止密码登录
+
+sshd配置文件位置`/etc/ssh/sshd_config`
+
+- 密码登录
+  - 禁止密码登录
+    - PasswordAuthentication no
+  - 允许密码登录
+    - PasswordAuthentication yes
+- root用户密码登录
+  - 允许root用户登录
+    - PermitRootLogin yes
+  - 禁止root用户密码登录
+    - PermitRootLogin prohibit-password
