@@ -16,9 +16,7 @@ vscode 安装 Remote-SSH 插件
 ssh-keygen
 ```
 
-密钥一般存储在
-
-> C:\Users\xxxx\\.ssh
+密钥一般存储在`C:\Users\xxxx\.ssh`
 
 把id_rsa.pub文件上传到主机 **~/.ssh** 目录下，并重命名为 **authorized_keys** ，权限设置为600，并执行 **service sshd restart**
 
@@ -30,3 +28,15 @@ cat id_rsa.pub >> authorized_keys
 sudo chmod 600 authorized_keys
 service sshd restart
 ```
+
+## 关闭密码登录
+
+打开`/etc/ssh/sshd_config`,把**PasswordAuthentication** 设置为 no
+随后重启sshd
+
+```bash
+systemctl restart sshd.service
+```
+
+> 注意：设置的会话先不要关，测试一下是否可以登录，避免设置错误无法登录
+

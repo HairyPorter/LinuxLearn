@@ -1,3 +1,3 @@
 # LinuxLearn
 
-## 我的linux学习仓库
+## 一些配置的笔记
