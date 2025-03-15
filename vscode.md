@@ -8,7 +8,7 @@ vscode 安装 Remote-SSH 插件
 
 ### 连接远程服务器
 
-点击左下角的><标志连接；输入密码连接，vscode会自动配置
+点击左下角的`><`标志连接；输入密码连接，vscode会自动配置
 
 ### 上传密钥
 
@@ -59,4 +59,4 @@ systemctl restart sshd.service
 
 ### pylance的自动导入不生效
 
-使用了anaconda虚拟环境，需要在`python.autoComplete.extraPaths`手动添加`site-packages`的路径
+使用了anaconda虚拟环境，可以在`python.autoComplete.extraPaths`手动添加`site-packages`的路径
